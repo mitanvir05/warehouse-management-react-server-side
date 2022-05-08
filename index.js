@@ -42,6 +42,26 @@ async function run() {
       const result = await inventoryCollection.insertOne(newInventory);
       res.send(result);
     });
+    //PUT/Update stock
+
+    app.put("/inventory/:id", async (req, res) => {
+      const id = req.params.id;
+      const updateQuantity = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          quantity: updateQuantity.quantity,
+        },
+      };
+      const updateResult = await inventoryCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.send(updateResult);
+    });
+
     //DELETE
     app.delete("/inventory/:id", async (req, res) => {
       const id = req.params.id;
